@@ -1,0 +1,69 @@
+todo.hs
+-------
+An application for command line todo list Haskell based todo list.
+
+Functionality of this todo list is shamelessly copied from Gina Trapani's 
+todo.txt (http://todotxt.com). 
+
+What I didn't like about todo.txt's implementation is being limited to a
+single todo list. I preferred more related to git, i.e. navigating up the
+directory structure until you've found a todo.txt file.
+
+This is my first "real" experience with Haskell, so if you find any bugs, or
+see any room for code improvement, please (PLEASE!) tell me about it. 
+
+
+Requirements
+------------
+This application has been tested on Ubuntu 10.10 running GHC 6.12.1
+
+
+Usage
+-----
+Usage is pretty much the same as the todotxt's implementation, instead of
+using projects and contexts it simply uses tags to group items. Furtheremore
+I renamed the "do" command to "did" (you're only completing an item once it's
+done right?). A brief overview of the commands:
+
+Add or modify an item
+ $ todo add [+tag] Item
+ $ todo mod X [+-tag]
+
+E.g. 
+ $ todo add +todohs +doc "Writing documentation"
+ 1. Write documentation (todohs, doc) 
+ 
+ $ todo add +todohs "Work on code"
+ 2. Work on code (todohs) 
+ 
+ $ todo mod -doc 1
+ 1. Write documentation (todohs)
+
+Complete an item
+ $ todo did 1.
+ Completed: 1. Write documentation (todohs)
+
+Clean your history file, removes all completed items and resets item ids
+ $ todo vacuum 
+
+List your current items (optionally by tag)
+ $ todo ls [tag]
+
+Prioritize or deprioritize 
+ $ todo pri 1 A
+ Set priority A to "Write documentation".
+ $ todo depri 1 A
+ Removed priority from "Write documentation".
+
+    
+Each item is a single row in your todo.txt file. Each row has the following
+format:
+ id tsadd tsdone <pri> +tag +tag Your todo item here
+
+The id of an item is defined by the total number of lines in the todo.txt
+file. A history of completed items is kept within the file where id equal to 
+the total number of lines of the document.
+
+"tsadd" and "tsdone" denote timestamps of item addition and completion.
+
+
