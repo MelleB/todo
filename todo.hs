@@ -1,7 +1,8 @@
 {- todo.hs
-   An application for command line todo list Haskell based todo list.
+   -------
+   An command line based todo list written in Haskell.
    
-   Functionality of this todo list is shamelessly copied from Gina Trapani's 
+   The functionality of this todo list is shamelessly copied from Gina Trapani's 
    todo.txt (http://todotxt.com). 
    
    What I didn't like about todo.txt's implementation is being limited to a
@@ -15,6 +16,7 @@
    Requirements
    ------------
    This application has been tested on Ubuntu 10.10 running GHC 6.12.1
+   AFAIK, requirements are limited to GHC 6.12.1 (earlier versions may work too)
    
    
    Usage
@@ -64,8 +66,7 @@
    the total number of lines of the document.
    
    "tsadd" and "tsdone" denote timestamps of item addition and completion.
-   
-   "Documentation" ends here.
+    
 -}
 
 import System.Environment (getArgs)
@@ -225,8 +226,8 @@ todoItemFromString ln = TodoItem { todoId = tId, addTime = aT, completeTime = cT
         tId  = read ((words props) !! 0) :: Int
         aT   = read ((words props) !! 1) :: Integer
         cT   = read ((words props) !! 2) :: Integer
-        pri  | prop_length < 3  = Nothing
-             | prop_length >= 3 = case ((words props) !! 3) of
+        pri  | prop_length < 4  = Nothing
+             | prop_length >= 4 = case ((words props) !! 3) of
                                    '<':p:'>':cs -> Just (priorityFromChar p)
                                    _            -> Nothing
         tags | prop_length < 4  = []
