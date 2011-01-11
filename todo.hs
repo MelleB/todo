@@ -122,7 +122,6 @@ executeAction (State a i o t) = case a of
     ("ls":_)        -> listItems (State a i o t)
     ("pri":_)       -> prioritizeItem True (State a i o t)
     ("depri":_)     -> prioritizeItem False (State a i o t)
-    ("help":_)      -> (State a i usage t)
     _               -> (State a i usage t)
 
 -- Add an item
@@ -186,12 +185,15 @@ vacuumList (State a i o t) = (State a (vacuumItems i) output t)
 
 prioritizeItem :: Bool -> State -> State
 prioritizeItem addPri (State a i o t)
-    | length a < 3 = error "At least three arguments required. See 'help'."
+    | addPri && length a < 3 = error "At least three arguments required. See 'help'."
+    | length a < 2 = error "At least two arguments required. See 'help'."
     | True = (State a (applyOnTodoItem priItem i (read $ (a !! 1)::Int)) output t)
     where priItem i = i { priority = if addPri 
-                                     then Just $ priorityFromChar (read $ (a !! 2)::Char) 
+                                     then Just $ priorityFromChar (head (a !! 2)) 
                                      else Nothing }
-          output = "Added priority " ++ (a !! 2) ++ " to item " ++ (a !! 1) ++ "."
+          output = case addPri of
+          			 True -> "Added priority " ++ (a !! 2) ++ " to item " ++ (a !! 1) ++ "."
+          			 False -> "Removed priority from item " ++ (a !! 1) ++ "."
 
 
 -- Apply a method on a specific todo item
@@ -223,8 +225,8 @@ todoItemFromString ln = TodoItem { todoId = tId, addTime = aT, completeTime = cT
         tId  = read ((words props) !! 0) :: Int
         aT   = read ((words props) !! 1) :: Integer
         cT   = read ((words props) !! 2) :: Integer
-        pri  | prop_length < 4  = Nothing
-             | prop_length >= 4 = case ((words props) !! 3) of
+        pri  | prop_length < 3  = Nothing
+             | prop_length >= 3 = case ((words props) !! 3) of
                                    '<':p:'>':cs -> Just (priorityFromChar p)
                                    _            -> Nothing
         tags | prop_length < 4  = []
@@ -239,7 +241,7 @@ todoItemToString i = (show $ todoId i)
                      ++ '\t':(show $ addTime i)
                      ++ '\t':(show $ completeTime i)
                      ++ (case priority i of
-                            Just a  -> '\t':[priorityToChar a]
+                            Just a  -> ['\t', '<', priorityToChar a,'>']
                             Nothing -> ""
                         )
                      ++ (case null $ tags i of 
