@@ -2,3 +2,6 @@
 *.hi
 todo
 todo.txt
+*.swp
+dist
+

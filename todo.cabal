@@ -1,0 +1,26 @@
+
+Name:          todo
+Synopsis:      A multi-directory todo list manager for the command-line
+Description:   See README
+Version:       0.0.1
+Author:	       MelleB
+Homepage:      http://github.com/MelleB/todo
+Stability:     alpha
+Build-type:    Simple
+License:       BSD3
+License-file:  LICENSE
+Cabal-version: >=1.2
+
+Library
+  build-depends: 
+    base >= 3 && < 5,
+    haskell98,
+    time,
+    directory,
+    filepath
+
+Executable todo
+  main-is:     todo.hs
+  
+
+
